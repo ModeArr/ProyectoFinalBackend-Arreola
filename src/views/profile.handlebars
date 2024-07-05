@@ -1,0 +1,41 @@
+    <div>
+      <h1 class="pt-2 mb-10 text-center text-3xl font-bold">Tu Cuenta</h1>
+    <div class="mx-auto max-w-5xl justify-center px-6 md:flex md:space-x-6 xl:px-0">
+      <div class="mb-6 rounded-lg bg-white p-6 shadow-md flex flex-col items-center gap-3">
+        <p>Email del usuario: {{user.email}}</p>
+        <p>Nombre del usuario: {{user.first_name}} {{user.last_name}}</p>
+        <p>Foto del usuario:</p>
+        <img class="w-40" src="https://firebasestorage.googleapis.com/v0/b/tienda-mastergym.appspot.com/o/409821206_1584279939000174_2931482275759986847_n.jpg?alt=media&token=e5a10d45-5c72-49d8-8725-f2bfd59ffead" alt=" avatar" />
+        <button onclick="window.location.href='/api/user/logout'" class="border px-6 py-2 my-4 btn btn-error">Salir</button>
+      </div>
+      <div class="mb-6 rounded-lg bg-white p-6 shadow-md">
+    <div>
+      <h2 class="pt-2 mb-10 text-center text-xl font-bold">Agregar documentos</h2>
+      <div class="flex flex-col gap-3">
+        <form action="/api/user/{{user._id}}/documents" method="post" enctype="multipart/form-data" >
+          <label class="form-control w-full max-w-xs pt-2 mb-10 text-center">
+            <div class="label">
+              <span class="label-text text-xl">Identifiacion</span>
+            </div>
+            <input type="file" name="identification" id="identification" class="file-input file-input-bordered w-full max-w-xs" />
+          </label>
+          <label class="form-control w-full max-w-xs pt-2 mb-10 text-center">
+            <div class="label">
+              <span class="label-text text-xl">Comprobante de domicilio</span>
+            </div>
+            <input type="file" name="proofAdress" id="proofAdress" class="file-input file-input-bordered w-full max-w-xs" />
+          </label>
+          <label class="form-control w-full max-w-xs pt-2 mb-10 text-center">
+            <div class="label">
+              <span class="label-text text-xl">Comprobante de estado de cuenta</span>
+            </div>
+            <input type="file" name="bankProof" id="bankProof" class="file-input file-input-bordered w-full max-w-xs" />
+          </label>
+          <button type="submit" class="w-full bg-indigo-600 text-white p-3 rounded-md">Agregar</button>
+        </form>
+
+      </div>
+    </div>
+      </div>
+    </div>
+    </div>

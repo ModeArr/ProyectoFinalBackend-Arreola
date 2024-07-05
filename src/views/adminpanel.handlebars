@@ -1,0 +1,87 @@
+<div class="overflow-x-auto">
+    <button onclick="deleteUser({{this.id}})" class="btn btn-error btn-s btn-block">Delete Inactive Users</button>
+  <table class="table">
+    <!-- head -->
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th>Rol</th>
+        <th>User ID</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- row 1 -->
+    {{#each users}}
+      <tr>
+        <td>
+          <div class="flex items-center gap-3">
+            <div class="avatar">
+              <div class="mask mask-squircle h-12 w-12">
+                <img
+                  src="https://firebasestorage.googleapis.com/v0/b/tienda-mastergym.appspot.com/o/409821206_1584279939000174_2931482275759986847_n.jpg?alt=media&token=e5a10d45-5c72-49d8-8725-f2bfd59ffead"
+                  alt="Avatar general" />
+              </div>
+            </div>
+            <div>
+              <div class="font-bold">{{this.first_name}} {{this.last_name}}</div>
+              <div class="text-sm opacity-50">{{this.email}}</div>
+            </div>
+          </div>
+        </td>
+        <td>
+          {{this.role}}
+        </td>
+        <td>{{this._id}}</td>
+        <th>
+          <button onclick="premiumToggle({{this._id}})" class="btn btn-secondary btn-xs">Upgrade Premium</button>
+        </th>
+      </tr>
+     {{/each}}
+    </tbody>
+    <!-- foot -->
+    <tfoot>
+      <tr>
+        <th>Nombre</th>
+        <th>Rol</th>
+        <th>User ID</th>
+        <th>Acciones</th>
+      </tr>
+    </tfoot>
+  </table>
+</div>
+<script>
+async function premiumToggle(uid) {
+  const url = `./api/user/premium/${uid}`;
+  try {
+    const response = await fetch(url, {
+    method: 'POST',
+    credentials: 'include'
+    })
+    if (!response.ok) {
+      throw new Error(`Response status: ${response.status}`);
+    }
+    console.log(response)
+    location.reload();
+  } catch (error) {
+    console.error(error.message);
+  }
+}
+
+async function deleteUsers(uid) {
+  const url = `./api/user/delete`;
+  try {
+    const response = await fetch(url, {
+    method: 'DELETE',
+    credentials: 'include'
+    });
+    if (!response.ok) {
+      throw new Error(`Response status: ${response.status}`);
+    }
+
+    location.reload();
+  } catch (error) {
+    console.error(error.message);
+  }
+}
+</script>
