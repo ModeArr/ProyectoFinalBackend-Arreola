@@ -7,6 +7,7 @@
         <th>Nombre</th>
         <th>Rol</th>
         <th>User ID</th>
+        <th>Hours last conection</th>
         <th>Acciones</th>
       </tr>
     </thead>
@@ -33,6 +34,7 @@
           {{this.role}}
         </td>
         <td>{{this._id}}</td>
+        <td>{{this.hoursInactive}}</td>
         <th>
           <button onclick="premiumToggle({{this._id}})" class="btn btn-secondary btn-xs">Upgrade Premium</button>
         </th>
@@ -45,6 +47,7 @@
         <th>Nombre</th>
         <th>Rol</th>
         <th>User ID</th>
+        <th>Hours last conection</th>
         <th>Acciones</th>
       </tr>
     </tfoot>

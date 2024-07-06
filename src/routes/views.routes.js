@@ -195,6 +195,13 @@ router.get('/admin-panel', authMdwFront, async(req, res) => {
     const usersAll = await userService.getAllUsers()
     const cartTotal = await cartService.getCartTotalAmount(req.user)
     const quantityTotal = await cartService.getCartTotalProducts(req.user)
+
+    usersAll.forEach(user => {
+        const time_difference = Date.now() - Date.parse(user.last_connection)
+        const result = Math.round(time_difference / (1000 * 60 * 60))
+        user.hoursInactive = result  
+    });
+    console.log(usersAll)
     res.render("adminpanel", {
         title: "Admin Panel - Proyecto Final CoderHouse",
         users: usersAll,

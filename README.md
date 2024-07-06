@@ -10,9 +10,9 @@
 
 #### Tutor: Allan Reynoso Naranjo
 
-#### Desafio Complementario de Testing
+#### Proyecto Final 
 
-#### Crear testing basico par enteder en genral el uso de testing. Se creo el testing basico de Cart, Products y Users; esto con Jest y SuperTest.
+#### Crear una simulacion de tienda con backend
 
 ---
 ## Iniciar proyecto
@@ -21,20 +21,30 @@ Iniciar el servidor primero:
 npm run start:dev
 ´´´
 
+### Extras
 Iniciar el testing:
 ´´´
 npm run test
 ´´´
 
+Construir CSS:
+´´´
+npm run build:css 
+´´´
+
 ## Links de vistas
 
-[Vista de todos los productos con paginacion](http://localhost:8080/products)
-[Vista de Carrito predeterminado](http://localhost:8080/carts/65df75400b81101bd1f5099d)
-[Vista Productos en Tiempo Real](http://localhost:8080/realtimeproducts)
-[Chat en tiempo real](http://localhost:8080/chat)
-[Login](http://localhost:8080/login)
-[Registro](http://localhost:8080/register)
+- [Index de vista](http://localhost:8080/)
+- [Login](http://localhost:8080/login)
+- [Registro](http://localhost:8080/register)
+- [Panel Administrador](http://localhost:8080/panel-admin)
+- [Perfil del usuario](http://localhost:8080/perfil)
+- [Vista de todos los productos con paginacion](http://localhost:8080/products)
+- [Vista de Carrito predeterminado](http://localhost:8080/carts/)
+- [Vista Productos en Tiempo Real](http://localhost:8080/realtimeproducts)
+- [Chat en tiempo real](http://localhost:8080/chat)
 
+## Usuario Admin
 Admin user:
 adminCoder@coder.com
 123

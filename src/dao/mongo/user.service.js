@@ -228,7 +228,7 @@ class UserManagerService {
     async getAllUsers() {
         try {
             const allMessages = await userModels.find({})
-            .select('first_name last_name role email documents cart')
+            .select('first_name last_name role email documents cart last_connection')
             .lean()
             return allMessages
         } catch (error) {
