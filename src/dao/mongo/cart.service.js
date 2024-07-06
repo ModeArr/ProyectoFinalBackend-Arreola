@@ -32,7 +32,6 @@ class CartServiceManager {
 
     async getCartProducts(id){
         try {
-            console.log(id)
            const findCart = await cartsModel.findById(id).lean()
            .then((res) => {
             return res.products
@@ -188,6 +187,19 @@ class CartServiceManager {
         })        
     }
 
+    async getCartTotalProducts(user){
+        return this.getCartProducts(user.cart)
+        .then((res) => {
+            if (!res){
+                return 0
+            }
+            return res.reduce( ( sum, p ) => sum +  p.quantity , 0)
+        })
+        .catch((error) => {
+            throw Error(error)
+        })        
+    }
+
     async updateProductStock(pId, quantity){
         try {
             const updatedProduct =  productsModel.findOneAndUpdate({_id: pId}, {$set : {
@@ -211,7 +223,6 @@ class CartServiceManager {
         const totalAmount = await this.getCartTotalAmount(user)
         const validStockProducts = cartProducts.filter((p) => p.quantity <= p.product.stock)
         const invalidStockProducts = cartProducts.filter((p) => p.quantity > p.product.stock)
-        console.log(totalAmount)
         
         const newTicket = new TicketDTO({totalAmount, user})
         const ticket = await ticketModel.create(newTicket)

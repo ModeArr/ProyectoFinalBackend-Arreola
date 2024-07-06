@@ -236,6 +236,10 @@ class UserManagerService {
         }
     }
 
+    async deleteInactiveUsers() {
+        const deletedUsers = await userModels.deleteMany()
+    }
+
 }
 
 export default UserManagerService

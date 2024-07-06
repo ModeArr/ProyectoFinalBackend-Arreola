@@ -34,4 +34,12 @@ export default class CartRepository {
     buyCart = async (user) => {
         return this.dao.buyCart(user)
     }
+
+    getCartTotalAmount = async (user) => {
+        return this.dao.getCartTotalAmount(user)
+    }
+
+    getCartTotalProducts = async (user) => {
+        return this.dao.getCartTotalProducts(user)
+    }
 }

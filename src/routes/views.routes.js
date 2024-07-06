@@ -1,17 +1,11 @@
 import { Router } from "express";
-import DBProductManager from "../dao/mongo/product.service.js";
-const products = new DBProductManager()
-import DBMessagesManager from "../dao/mongo/messages.service.js";
-const messages = new DBMessagesManager()
-import DBCartManager from "../dao/mongo/cart.service.js";
-const cart = new DBCartManager()
 import { authMdwFront, loggedRedirect } from "../middleware/auth.middleware.js";
-import { userService } from "../repository/index.js";
+import { userService, cartService, messagesService, productService } from "../repository/index.js";
 
 
 const router = Router()
 
-router.get('/', authMdwFront, (req, res) => {
+router.get('/', authMdwFront, async(req, res) => {
     const { page = 1, limit = 5, sort } = req.query;
 
     let query = {}
@@ -28,13 +22,17 @@ router.get('/', authMdwFront, (req, res) => {
 
     const url = new URL(`${req.protocol}://${req.get('host')}${req.originalUrl}`);
 
-    products.getProducts(page, limit, sort, query, url).then(result => {
+    const cartTotal = await cartService.getCartTotalAmount(req.user)
+    const quantityTotal = await cartService.getCartTotalProducts(req.user)
+    productService.getProducts(page, limit, sort, query, url).then(result => {
         res.render("index", {
             title: "Proyecto Final CoderHouse",
             products: result.payload,
             nextPage: result.nextLink,
             prevPage: result.prevLink,
             user: req.user,
+            total: cartTotal,
+            quantityTotal: quantityTotal,
             style: "styles.css"
         })
     }).catch(err => {
@@ -60,7 +58,7 @@ router.get('/realtimeproducts', authMdwFront, (req, res) => {
 
     const url = new URL(`${req.protocol}://${req.get('host')}${req.originalUrl}`);
 
-    products.getProducts(page, limit, sort, query, url).then(result => {
+    productService.getProducts(page, limit, sort, query, url).then(result => {
         res.render("realtimeproducts", {
             title: "Proyecto Final CoderHouse - Productos en tiempo real",
             products: result.payload,
@@ -76,7 +74,7 @@ router.get('/realtimeproducts', authMdwFront, (req, res) => {
 
 router.get('/chat', (req, res) => {
 
-    messages.getAllMessages().then(result => {
+    messagesService.getAllMessages().then(result => {
         res.render("chat", {
             title: "Proyecto Final CoderHouse - Chat en tiempo real",
             messages: result
@@ -87,7 +85,7 @@ router.get('/chat', (req, res) => {
     });
 })
 
-router.get('/products', authMdwFront, (req, res) => {
+router.get('/products', authMdwFront, async(req, res) => {
     const { page = 1, limit = 5, sort } = req.query;
 
     let query = {}
@@ -104,13 +102,17 @@ router.get('/products', authMdwFront, (req, res) => {
 
     const url = new URL(`${req.protocol}://${req.get('host')}${req.originalUrl}`);
 
-    products.getProducts(page, limit, sort, query, url).then(result => {
+    const cartTotal = await cartService.getCartTotalAmount(req.user)
+    const quantityTotal = await cartService.getCartTotalProducts(req.user)
+    productService.getProducts(page, limit, sort, query, url).then(result => {
         res.render("products", {
             title: "Proyecto Final CoderHouse",
             products: result.payload,
             nextPage: result.nextLink,
             prevPage: result.prevLink,
             user: req.user,
+            total: cartTotal,
+            quantityTotal: quantityTotal,
             style: "styles.css"
         })
     }).catch(err => {
@@ -122,7 +124,7 @@ router.get('/products', authMdwFront, (req, res) => {
 router.get('/carts/:cid', authMdwFront, (req, res) => {
     const idCart = req.params.cid
 
-    cart.getCartProducts(idCart).then(result => {
+    cartService.getCartProducts(idCart).then(result => {
         res.render("cart", {
             title: "Proyecto Final CoderHouse - Carrito de Compras",
             product: result
@@ -135,14 +137,15 @@ router.get('/carts/:cid', authMdwFront, (req, res) => {
 
 router.get('/cart', authMdwFront, async(req, res) => {
     const idCart = req.user.cart
-    const cartTotal = await cart.getCartTotalAmount(req.user)
-
-    cart.getCartProducts(idCart).then(result => {
+    const cartTotal = await cartService.getCartTotalAmount(req.user)
+    const quantityTotal = await cartService.getCartTotalProducts(req.user)
+    cartService.getCartProducts(idCart).then(result => {
         res.render("cart", {
             title: "Proyecto Final CoderHouse - Carrito de Compras",
             product: result,
+            idCart: idCart,
             total: cartTotal,
-            idCart: idCart
+            quantityTotal: quantityTotal
         })
     }).catch(err => {
         console.log(err);
@@ -177,18 +180,26 @@ router.get('/updatepassword/:token', loggedRedirect, (req, res) => {
 })
 
 router.get('/perfil', authMdwFront, async(req, res) => {
+    const cartTotal = await cartService.getCartTotalAmount(req.user)
+    const quantityTotal = await cartService.getCartTotalProducts(req.user)
     res.render("profile", {
         title: "Proyecto Final CoderHouse",
         user: req.user,
+        total: cartTotal,
+        quantityTotal: quantityTotal,
         style: "styles.css"
     })
 })
 
 router.get('/admin-panel', authMdwFront, async(req, res) => {
     const usersAll = await userService.getAllUsers()
+    const cartTotal = await cartService.getCartTotalAmount(req.user)
+    const quantityTotal = await cartService.getCartTotalProducts(req.user)
     res.render("adminpanel", {
         title: "Admin Panel - Proyecto Final CoderHouse",
         users: usersAll,
+        total: cartTotal,
+        quantityTotal: quantityTotal,
         style: "styles.css"
     })
 })

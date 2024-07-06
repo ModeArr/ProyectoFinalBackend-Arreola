@@ -8,10 +8,8 @@ const secret = JWT_SECRET
 const logoutUserCtrl = async(req, res) => {
     res.clearCookie('jwt')
     userService.setLastConnection()
-    res.status(200).json({
-        status: "ok",
-        message: 'You have logged out'
-    })
+    res.redirect('/')
+    //res.status(200).json({ status: "ok", message: 'You have logged out'})
 }
 
 const loginUserCookieCtrl = async(req, res) => {
@@ -23,8 +21,9 @@ const loginUserCookieCtrl = async(req, res) => {
       signed: true,
       maxAge: 1000 * 60 * 30 // 30 min
     })
-  
-    res.status(200).json({status: "ok", message: "Ingresaste con exito"});
+
+    res.redirect('/')
+    //res.status(200).json({status: "ok", message: req.user});
   }
 
   const currentUserCtrl = async(req, res) => {
