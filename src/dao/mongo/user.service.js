@@ -237,7 +237,25 @@ class UserManagerService {
     }
 
     async deleteInactiveUsers() {
-        const deletedUsers = await userModels.deleteMany()
+        const deletedUsers = []
+        const usersAll = await this.getAllUsers()
+        usersAll.forEach(user => {
+            const time_difference = Date.now() - Date.parse(user.last_connection)
+            const hoursInactive = Math.round(time_difference / (1000 * 60 * 60))
+            if (hoursInactive > 48){
+                userModels.deleteOne({_id: user._id})
+                .then((res) => {
+                    if (res.deletedCount === 1){
+                        deletedUsers.push( user )
+                    }
+                    console.log(deletedUsers)
+                })
+                .catch((error) => {
+                    throw Error(error)
+                })   
+            }
+        }) 
+        return deletedUsers
     }
 
 }

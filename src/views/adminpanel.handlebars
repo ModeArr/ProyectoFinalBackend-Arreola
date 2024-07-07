@@ -1,5 +1,5 @@
 <div class="overflow-x-auto">
-    <button onclick="deleteUser({{this.id}})" class="btn btn-error btn-s btn-block">Delete Inactive Users</button>
+    <button onclick="deleteAllUsers()" class="btn btn-error btn-s btn-block">Delete Inactive Users</button>
   <table class="table">
     <!-- head -->
     <thead>
@@ -36,7 +36,7 @@
         <td>{{this._id}}</td>
         <td>{{this.hoursInactive}}</td>
         <th>
-          <button onclick="premiumToggle({{this._id}})" class="btn btn-secondary btn-xs">Upgrade Premium</button>
+          <button onclick="premiumToggle('{{this._id}}')" class="btn btn-secondary btn-xs"> Upgrade Premium </button>
         </th>
       </tr>
      {{/each}}
@@ -55,7 +55,9 @@
 </div>
 <script>
 async function premiumToggle(uid) {
-  const url = `./api/user/premium/${uid}`;
+  const urlPath =  window.location.protocol + "//" + window.location.host
+  const url = `${urlPath}/api/user/premium/${uid}`;
+  console.log(url)
   try {
     const response = await fetch(url, {
     method: 'POST',
@@ -71,8 +73,9 @@ async function premiumToggle(uid) {
   }
 }
 
-async function deleteUsers(uid) {
-  const url = `./api/user/delete`;
+async function deleteAllUsers() {
+  const urlPath =  window.location.protocol + "//" + window.location.host
+  const url = `${urlPath}/api/user/`
   try {
     const response = await fetch(url, {
     method: 'DELETE',

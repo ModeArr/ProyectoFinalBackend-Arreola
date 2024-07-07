@@ -14,6 +14,7 @@ import * as config from "./config/config.js"
 import { Server } from 'socket.io'
 import swaggerJSDoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
+import cors from "cors"
 
 const PORT = config.PORT
 const API_PREFIX = config.API_PREFIX
@@ -23,7 +24,13 @@ const app = express()
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 import { swaggerOpts } from "./config/swagger.config.js";
+const corsOptions = {
+    origin: config.CLIENT_URL,
+    optionsSuccessStatus: 200,
+  };
+ 
 
+app.use(cors(corsOptions));
 app.use(express.urlencoded({ extends: true }));
 app.use(express.json()); 
 app.use(express.static(__dirname + '/public'))

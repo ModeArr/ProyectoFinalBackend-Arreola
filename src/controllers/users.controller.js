@@ -108,10 +108,10 @@ const loginUserCookieCtrl = async(req, res) => {
   }
 
   const togglePremiumCtrl = async(req,res) => {
-    const identification = await userService.getDocument(uid, identification)
-    const proofAdress = await userService.getDocument(uid, proofAdress)
-    const bankProof = await userService.getDocument(uid, bankProof)
-    if(user.role === "USER" && 
+    const identification = await userService.getDocument(req.user._id, "identification")
+    const proofAdress = await userService.getDocument(req.user._id, "proofAdress")
+    const bankProof = await userService.getDocument(req.user._id, "bankProof")
+    if(req.user.role === "USER" && 
       (!identification || !proofAdress || !bankProof)){
         res.status(400).json({status: "error", message: "Para ser premium nesecitas subir tus documentos de identidad"});
     }
@@ -160,13 +160,24 @@ const loginUserCookieCtrl = async(req, res) => {
     }
   }
 
+  const deleteInactiveUsersCtrl = async(req,res) => {
+      await userService.deleteInactiveUsers()
+      .then((deletedUsers) => {
+        res.status(200).json({status: "sucsess", message: deletedUsers});
+      })
+      .catch(err => {
+        res.status(400).json({status: "error", message: err.message});
+      });
+  }
+
 export {
+  deleteInactiveUsersCtrl,
   getAllUsersCtrl,
   uploadDocumentsCtrl,
-    logoutUserCtrl,
-    loginUserCookieCtrl,
-    currentUserCtrl,
-    forgotPasswordCtrl,
-    updatePasswordCtrl,
-    togglePremiumCtrl
+  logoutUserCtrl,
+  loginUserCookieCtrl,
+  currentUserCtrl,
+  forgotPasswordCtrl,
+  updatePasswordCtrl,
+  togglePremiumCtrl
 }
