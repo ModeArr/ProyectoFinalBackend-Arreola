@@ -68,9 +68,8 @@ class UserManagerService {
 
     async checkUserID(id) {
         try {
-            const findUser = await userModels.findById(id).lean()
-            return findUser
-
+            return await userModels.findById(id).lean()
+             
         } catch (error) {
             throw Error(error)
         }  

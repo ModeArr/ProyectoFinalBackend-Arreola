@@ -66,20 +66,12 @@ const updateProductCtrl = async(req, res) => {
 const deleteProductCtrl = async(req, res) => {
     const id = req.params.pid
     const io = req.app.get('io')
-    
-    const productPremium = productService.getProductById(id) //check if product has owner
-      .then(product => {
-        if (!product.owner){
-            return false
-        }
-        return product.owner
-      })
-      .catch(err => {
-        res.status(400).json({status: "error", message: err.message})
-      })
+    const product = await productService.getProductById(id)
 
-    if (productPremium){ //send email if product have owner
+    if (product.owner){ //send email if product have owner
+        console.log(productPremium)
         const emailOwner = await userService.checkUserID(productPremium)
+        console.log(emailOwner)
         const data = {
             to: emailOwner,
             subject: 'A product you created have been deleted',
