@@ -43,11 +43,18 @@ npm run build:css
 - [Vista de Carrito predeterminado](http://localhost:8080/carts/)
 - [Vista Productos en Tiempo Real](http://localhost:8080/realtimeproducts)
 - [Chat en tiempo real](http://localhost:8080/chat)
+- [API DOCS](http://localhost:8080/api/docs)
 
 ## Usuario Admin
-Admin user:
+Admin Credentials:
+Email:
+```
 adminCoder@coder.com
+```
+Password:
+```
 123
+```
 
 ## Producto ejemplo para subir
 ```JSON

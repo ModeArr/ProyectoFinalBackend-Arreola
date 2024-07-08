@@ -1,4 +1,6 @@
 import { productService } from "../repository/index.js";
+import { userService } from "../repository/index.js";
+import { transporter } from "../utils/email.js"
 
 const getProductsCtrl = async(req, res) => {
     const { page = 1, limit = 5, sort } = req.query;
@@ -64,14 +66,49 @@ const updateProductCtrl = async(req, res) => {
 const deleteProductCtrl = async(req, res) => {
     const id = req.params.pid
     const io = req.app.get('io')
+    
+    const productPremium = productService.getProductById(id) //check if product has owner
+      .then(product => {
+        if (!product.owner){
+            return false
+        }
+        return product.owner
+      })
+      .catch(err => {
+        res.status(400).json({status: "error", message: err.message})
+      })
+
+    if (productPremium){ //send email if product have owner
+        const emailOwner = await userService.checkUserID(productPremium)
+        const data = {
+            to: emailOwner,
+            subject: 'A product you created have been deleted',
+            html: `
+            <h3>Hola, lamentamos informarte que uno de tus productos fue borrado por una administrador</h3>
+            <p>Puedes comunicarta al correo webmaster@tienda.com si es que esto fue un erro."</p>
+            `,
+          }
+
+        productService.deleteProduct(id)
+          .then(result => {
+              io.emit('product deleted', id)
+              transporter.sendMail(data, function(error, body) {
+                  if (error) {
+                    return res.status(400).json({error: error.message})
+                  }
+                  return res.status(200).json({status: "success", result})
+                })
+          }).catch(err => {
+              res.status(400).json({status: "error", message: err.message})
+          })
+    }
 
     productService.deleteProduct(id)
         .then(result => {
             io.emit('product deleted', id)
-            return res.status(200).json({status: "success", result})
         }).catch(err => {
             res.status(400).json({status: "error", message: err.message})
-        });
+        })
 }
 
 
