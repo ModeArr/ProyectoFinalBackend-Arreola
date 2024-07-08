@@ -10,7 +10,8 @@ import { logoutUserCtrl,
           togglePremiumCtrl,  
           uploadDocumentsCtrl,
           getAllUsersCtrl,
-          deleteInactiveUsersCtrl } from "../controllers/users.controller.js";
+          deleteInactiveUsersCtrl,
+          deleteUserCtrl } from "../controllers/users.controller.js";
 
 const router = Router();
 
@@ -56,6 +57,8 @@ router.post("/:uid/documents", authMdw(['USER','ADMIN','PREMIUM']), uploadDocume
 
 router.get("/", authMdw(['ADMIN']), getAllUsersCtrl)
 
-router.delete("/", authMdw(['ADMIN']), deleteInactiveUsersCtrl)
+router.delete("/inactive", authMdw(['ADMIN']), deleteInactiveUsersCtrl)
+
+router.delete("/:uid", authMdw(['ADMIN']), deleteUserCtrl)
 
 export default router;

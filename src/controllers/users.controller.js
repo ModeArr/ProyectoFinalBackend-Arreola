@@ -170,7 +170,18 @@ const loginUserCookieCtrl = async(req, res) => {
       });
   }
 
+  const deleteUserCtrl = async(req,res) => {
+    await userService.deleteUser(req.params.uid)
+    .then((user) => {
+      res.status(200).json({status: "sucsess", message: user});
+    })
+    .catch(err => {
+      res.status(400).json({status: "error", message: err.message});
+    });
+}
+
 export {
+  deleteUserCtrl,
   deleteInactiveUsersCtrl,
   getAllUsersCtrl,
   uploadDocumentsCtrl,

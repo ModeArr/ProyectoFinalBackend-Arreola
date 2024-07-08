@@ -258,6 +258,19 @@ class UserManagerService {
         return deletedUsers
     }
 
+    async deleteUser(uid) {
+        return userModels.deleteOne({_id: uid})
+        .then((res) => {
+            if (!res.acknowledged){
+                throw Error("Cant delete this user")
+            }
+            return res
+        })
+        .catch((error) => {
+            throw Error(error)
+        })  
+    }
+
 }
 
 export default UserManagerService

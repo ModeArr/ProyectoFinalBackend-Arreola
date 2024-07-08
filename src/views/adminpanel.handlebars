@@ -37,6 +37,7 @@
         <td>{{this.hoursInactive}}</td>
         <th>
           <button onclick="premiumToggle('{{this._id}}')" class="btn btn-secondary btn-xs"> Upgrade Premium </button>
+          <button onclick="deleteUser('{{this._id}}')" class="btn btn-error btn-xs"> Delete User</button>
         </th>
       </tr>
      {{/each}}
@@ -75,7 +76,25 @@ async function premiumToggle(uid) {
 
 async function deleteAllUsers() {
   const urlPath =  window.location.protocol + "//" + window.location.host
-  const url = `${urlPath}/api/user/`
+  const url = `${urlPath}/api/user/inactive`
+  try {
+    const response = await fetch(url, {
+    method: 'DELETE',
+    credentials: 'include'
+    });
+    if (!response.ok) {
+      throw new Error(`Response status: ${response.status}`);
+    }
+
+    location.reload();
+  } catch (error) {
+    console.error(error.message);
+  }
+}
+
+  async function deleteUser(uid) {
+  const urlPath =  window.location.protocol + "//" + window.location.host
+  const url = `${urlPath}/api/user/${uid}`
   try {
     const response = await fetch(url, {
     method: 'DELETE',

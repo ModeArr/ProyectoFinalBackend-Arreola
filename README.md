@@ -17,20 +17,20 @@
 ---
 ## Iniciar proyecto
 Iniciar el servidor primero:
-´´´
+```
 npm run start:dev
-´´´
+```
 
 ### Extras
 Iniciar el testing:
-´´´
+```
 npm run test
-´´´
+```
 
 Construir CSS:
-´´´
+```
 npm run build:css 
-´´´
+```
 
 ## Links de vistas
 
