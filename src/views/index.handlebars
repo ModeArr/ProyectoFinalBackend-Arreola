@@ -22,9 +22,7 @@
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-4 w-4">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" />
                                 </svg>
-                            <form action="http://localhost:8080/api/carts/{{../user.cart}}/product/{{this.id}}" method="post" id="addCart">
-                                <button class="text-sm" type="submit">Add to cart</button>
-                            </form>
+                                <button class="text-sm" onclick="addProductCart('{{../user.cart}}', '{{this.id}}')"> Add to cart</button>
                         </div>
                     </div>
                     </div>
@@ -48,5 +46,46 @@
                 </ul>
         </div>   
     </section>
+    
+    <script>
+        const Toast = Swal.mixin({
+            toast: true,
+            position: 'bottom-end',
+            iconColor: 'white',
+            customClass: {
+                popup: 'colored-toast',
+            },
+            showConfirmButton: false,
+            timer: 1500,
+            timerProgressBar: true,
+        })
+        async function addProductCart(cartId, pid) {
+            const urlPath =  window.location.protocol + "//" + window.location.host
+            const url = `${urlPath}/api/carts/${cartId}/product/${pid}`;
+            console.log(url)
+            try {
+                const response = await fetch(url, {
+                method: 'POST',
+                credentials: 'include'
+                })
+                if (!response.ok) {
+                await Toast.fire({
+                    icon: 'error',
+                    title: 'No se pudo agregar el producto',
+                })
+                console.log(response)
+                throw new Error(`Response status: ${response.status}`);
+                }
+                const json = await response.json()
+                console.log(json)
+                console.log(response)
 
-    <script src="/js/index.js"></script>
+                  await Toast.fire({
+                    icon: 'success',
+                    title: 'Se agrego el producto a tu carrito',
+                    })
+            } catch (error) {
+                console.error(error.message);
+            }
+        }
+    </script>
