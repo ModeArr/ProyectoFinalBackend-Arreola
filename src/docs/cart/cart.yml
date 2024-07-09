@@ -1,66 +1,48 @@
 paths:
-  /api/cart/:
+  /api/cart/{cid}:
     get:
-      summary: get products whit paginations
+      summary: get cart products
       tags:
         - Cart
-      parameters: 
-        - in: query
-          name: page
-          schema:
-            type: number
-          description: The number of page to return
-        - in: query
-          name: limit
-          schema:
-            type: number
-          description: The number of products to return per page
-        - in: query
-          name: sort
-          schema:
-            type: string
-            enum:
-              - desc
-              - asc 
-              - ascending
-              - descending
-          description: Sort the products by price ascending or descending
-        - in: query
-          name: status
-          schema:
-            type: boolean
-          description: Return the products with the status false or true
-        - in: query
-          name: category
-          schema:
-            type: string
-          description: Returns the products with the category is given
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: id of the cart
       responses:
         "200":
-          description: get products pagination with queries
+          description: get array of prodcuts that cart contains
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: "#components/schemas/User"
+                  $ref: "#components/schemas/Products"
         "400":
           description: error server side
-  /api/cart/{uid}/:
+  /api/cart/{cid}/product/{pid}:
     get:
-      summary: get user by id
+      summary: Add product to cart, if already exist will increment quantity
       tags:
         - Cart
       parameters:
+        - name: cid
+          in: path
+          required: true
+          description: id of cart
         - name: uid
           in: path
           required: true
-          description: id of user
-          schema:
-            $type: ObjectId
+          description: id of product
       responses:
         "200":
-          description: get user by id info
+          description: returns an array with the product object
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  _id: 
         "500":
           description: server side error
 
