@@ -206,9 +206,6 @@ class ProductService {
         try {
             const deletedProduct = productsModel.findByIdAndDelete(id)
             .then( (res) => {
-                if (!res){
-                    throw new Error(`No se pudo borrar el id: ${id}`)
-                }
                 return res 
             })
             .catch( (error) => {

@@ -35,8 +35,8 @@ function productMdwPremium(req, res, next){
       const userId = userJWT._id
       const isUserPremiumAndAdmin = currentRole === 'PREMIUM' || currentRole === "ADMIN"
       const product = await productService.getProductById(req.params.pid)
-      const productIsFromOwner = product.owner === userId
-
+      const productIsFromOwner = product[0].owner === userId
+      
       if (err) {
         return next(err)
       }

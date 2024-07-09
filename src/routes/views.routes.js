@@ -31,6 +31,7 @@ router.get('/', authMdwFront, async(req, res) => {
             nextPage: result.nextLink,
             prevPage: result.prevLink,
             user: req.user,
+            currentPage: result.page,
             total: cartTotal,
             quantityTotal: quantityTotal,
             style: "styles.css"
@@ -64,6 +65,7 @@ router.get('/realtimeproducts', authMdwFront, (req, res) => {
             products: result.payload,
             nextPage: result.nextLink,
             prevPage: result.prevLink,
+            currentPage: result.page,
             user: req.user
         })
     }).catch(err => {
@@ -110,6 +112,7 @@ router.get('/products', authMdwFront, async(req, res) => {
             products: result.payload,
             nextPage: result.nextLink,
             prevPage: result.prevLink,
+            currentPage: result.page,
             user: req.user,
             total: cartTotal,
             quantityTotal: quantityTotal,

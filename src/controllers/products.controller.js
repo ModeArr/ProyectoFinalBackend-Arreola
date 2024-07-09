@@ -67,13 +67,12 @@ const deleteProductCtrl = async(req, res) => {
     const id = req.params.pid
     const io = req.app.get('io')
     const product = await productService.getProductById(id)
+    const owner = await userService.checkUserID(product[0].owner)
 
-    if (product.owner){ //send email if product have owner
-        console.log(productPremium)
-        const emailOwner = await userService.checkUserID(productPremium)
-        console.log(emailOwner)
+    if (owner.role === "PREMIUM"){ //send email if product have owner
+
         const data = {
-            to: emailOwner,
+            to: owner.email,
             subject: 'A product you created have been deleted',
             html: `
             <h3>Hola, lamentamos informarte que uno de tus productos fue borrado por una administrador</h3>
@@ -98,6 +97,7 @@ const deleteProductCtrl = async(req, res) => {
     productService.deleteProduct(id)
         .then(result => {
             io.emit('product deleted', id)
+            return res.status(200).json({status: "success", result})
         }).catch(err => {
             res.status(400).json({status: "error", message: err.message})
         })
