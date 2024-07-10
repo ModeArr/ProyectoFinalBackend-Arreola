@@ -17,6 +17,9 @@ const ticketSchema = new Schema({
     type: String,
     required: true
   },
+  productsPurchased: {
+    type: Array
+  }
 });
 
 const ticketModel = model(collection, ticketSchema);

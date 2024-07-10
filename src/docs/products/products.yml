@@ -199,7 +199,7 @@ paths:
                   status: 
                     type: string
                     default: "success"
-                    description: indicates if the delation was succesful
+                    description: indicates if the deletion was succesful
                   product:
                     $ref: '#/components/schemas/Product'
           description: retruns an array with the product object that was deleted
@@ -217,10 +217,6 @@ paths:
                     type: string
                     description: message of the error that ocurred
   
-
-
-
-
 
 components:
   schemas:

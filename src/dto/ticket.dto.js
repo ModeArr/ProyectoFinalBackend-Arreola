@@ -5,6 +5,7 @@ export default class TicketDTO {
         this.code = uuidv4(), 
         this.amount = ticket.totalAmount, 
         this.purchase_datetime = Date.now(), 
-        this.purchaser = ticket.user.email
+        this.purchaser = ticket.user.email,
+        this.productsPurchased = ticket.validStockProducts
     }
 }

@@ -22,5 +22,9 @@ cartsSchema.pre('findOne', function () {
     this.populate('products.product')
 })
 
+cartsSchema.pre('findById', function () {
+    this.populate('products.product')
+})
+
 const cartsModel = model(collectionName, cartsSchema);
 export default cartsModel;

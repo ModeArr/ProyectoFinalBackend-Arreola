@@ -35,7 +35,7 @@ const deleteProductCartCtrl = async(req,res) => {
     const idProduct = req.params.pid
 
     cartService.deleteProductCart(idCart, idProduct).then(result => {
-        res.status(200).json(result);
+        res.status(200).json({status: "success", acknowledged: result.acknowledged, productId: idProduct, cartId: idProduct});
     }).catch(err => {
         console.log(err);
         res.status(400).json(err.message);

@@ -58,7 +58,7 @@ class CartServiceManager {
             }
 
             if (!productExist.length){
-                const productAdd = await cartsModel.findByIdAndUpdate( idCart,
+                const productAdd = await cartsModel.findOneAndUpdate( {_id: idCart},
                 { $push: 
                     { products: { product: idProduct, quantity: 1 } } 
                 }, {returnDocument: 'after'})
@@ -224,7 +224,7 @@ class CartServiceManager {
         const validStockProducts = cartProducts.filter((p) => p.quantity <= p.product.stock)
         const invalidStockProducts = cartProducts.filter((p) => p.quantity > p.product.stock)
         
-        const newTicket = new TicketDTO({totalAmount, user})
+        const newTicket = new TicketDTO({totalAmount, user, validStockProducts})
         const ticket = await ticketModel.create(newTicket)
         .then((res) => {
             //remover stock
@@ -235,7 +235,7 @@ class CartServiceManager {
                 'products': invalidStockProducts
             }})
             .then((res) => {
-                console.log(res)
+                //console.log(res)
             })
             .catch((error) => {
                 throw Error(error)
