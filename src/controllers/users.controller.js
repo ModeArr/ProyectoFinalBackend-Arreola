@@ -8,7 +8,7 @@ const secret = JWT_SECRET
 const logoutUserCtrl = async(req, res) => {
     res.clearCookie('jwt')
     userService.setLastConnection()
-    res.redirect('/')
+    res.redirect('/login')
     //res.status(200).json({ status: "ok", message: 'You have logged out'})
 }
 
@@ -86,7 +86,7 @@ const loginUserCookieCtrl = async(req, res) => {
     if (token) {
       jsonwebtoken.verify(token, RESET_PASSWORD_KEY, function(error, decodedData) {
         if (error) {
-          return res.status(400).json({error: 'Token incorrecta o expirada'})
+          return res.status(400).json({message: 'Token incorrecta o expirada'})
         }
 
       userService.changeUserPassword(token, password)

@@ -247,7 +247,6 @@ class UserManagerService {
                     if (res.deletedCount === 1){
                         deletedUsers.push( user )
                     }
-                    console.log(deletedUsers)
                 })
                 .catch((error) => {
                     throw Error(error)

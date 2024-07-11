@@ -1,7 +1,7 @@
 paths:
-  /api/user/current:
-    get:
-      summary: get current credenttial in cookie
+  /api/user/login:
+    post:
+      summary: Login with email and password
       tags:
         - User
       consumes:
@@ -22,110 +22,59 @@ paths:
               password:
                 type: string
                 format: password
-                description: id of product
+                description: password of the user
       responses:
         "302":
-          description: Will redirect you to homepage if successfully logged
-        "400":
-          description: error server side
+          description: Will redirect you to homepage if successfully logged and to login if fails
   /api/user/logout:
     get:
-      summary: Add product to cart, if already exist will increment quantity
+      summary: Logout form current user session
       tags:
-        - Cart
-      parameters:
-        - name: cid
-          in: path
-          required: true
-          description: id of cart
-        - name: pid
-          in: path
-          required: true
-          description: id of product
+        - User
       responses:
-        "200":
-          description: returns cart object
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  _id: 
-                    type: string
-                    description: mongoid of the cart
-                  products:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        product: 
-                          type: string
-                          description: mongoid of the product
-                        quantity:
-                          type: number
-                          description: amount o items on the cart
-                        _id: 
-                          type: string
-                          description: mongo id of the object in the cart (not really used, just refrence)
-        "400":
-          description: internal error
-  /api/carts/{cartid}/product/{pid}:
-    delete:
-      summary: delete a product from the cart
+        "302":
+          description: redirects to login
+  /api/user/register:
+    post:
+      summary: Register a user
       tags:
-        - Cart
+        - User
+      consumes:
+        - application/json
       parameters:
-        - name: cartid
-          in: path
-          required: true
-          description: id of cart
-        - name: pid
-          in: path
-          required: true
-          description: id of product
-        - name: quantity
-          in: query
+        - in: body
+          name: register
           schema:
-            type: number
-          required: true
-          description: quantity that is gonna be set
+            type: object
+            required:
+              - email
+              - password
+            properties:
+              email:
+                type: string
+                format: email
+                description: email of user
+              first_name:
+                type: string
+                description: name of user
+              last_name:
+                type: string
+                description: last_name of user
+              age:
+                type: number
+                description: age of the user
+              password:
+                type: string
+                format: password
+                description: password of the user
       responses:
-        "200":
-          description: returns acknowledged of the deletion of the product
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  status: 
-                    type: string
-                    description: status if the deleation success
-                    defualt: success
-                  acknowledged:
-                    type: boolean
-                    description: acknowledgedment of moongose that the produt had been deleted
-                  productId:
-                    type: string
-                    description: id of the product deleted
-                  cartId:
-                    type: string
-                    description: id of the cart that the product have been deleted
-        "400":
-          description: internal error
-  /api/carts/{cartid}/product/{productid}:
-    put:
-      summary: delete a product from the cart
+        "302":
+          description: if successfully register will redirect to login if fails redirects to register
+  /api/user/current:
+    get:
+      summary: Obtain jwt token and user info in the session
       tags:
-        - Cart
-      parameters:
-        - name: cartid
-          in: path
-          required: true
-          description: id of cart
-        - name: productid
-          in: path
-          required: true
-          description: id of product
+        - User
       responses:
         "200":
           description: return the cart of the product modi
@@ -134,68 +83,238 @@ paths:
               schema:
                 type: object
                 properties:
-                  _id: 
+                  status: 
+                    defualt: ok
                     type: string
-                    description: mongoid of the cart
-                  products:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        product: 
-                          type: string
-                          description: mongoid of the product
-                        quantity:
-                          type: number
-                          description: amount o items on the cart
-                        _id: 
-                          type: string
-                          description: mongo id of the object in the cart (not really used, just refrence)
-        "400":
-          description: internal error
-  /api/carts/{cid}/purchase:
+                    description: indicate that process was successfull
+                  cookieJWT:
+                    type: string
+                  JWTPayload:
+                    $ref: '#/components/schemas/User'            
+        "401":
+          description: Acces Denied is given when there is no credentials
+  /api/user/resetpassword:
     post:
-      summary: Purhsase de cart id given, this remove stock of the product and create a ticket object
+      summary: send a email whith the link to change the users password
       tags:
-        - Cart
-      parameters:
-        - name: cartid
-          in: path
-          required: true
-          description: id of cart
-        - name: productid
-          in: path
-          required: true
-          description: id of product
+        - User
       responses:
         "200":
           description: return the ticket of the products purchased
           content:
             application/json:
-              schema:
-                $ref: '#/components/schemas/Ticket'
+              description: json containing message of successfull
+              type: object
+              properties:
+                message:
+                  type: string
+                  default: El correo fue enviado sigue las instrucciones
         "400":
           description: internal error
-  /api/carts/{ccid}:
+          content:
+            application/json:
+              description: when error return status error and message of error
+              type: object
+              properties:
+                status:
+                  type: string
+                  default: error
+                message:
+                  type: string
+                  description: Error message
+  /api/user/updatepassword/{token}:
+    post:
+      summary: Recive a JWT token and change password
+      tags:
+        - User
+      parameters:
+        - name: token
+          in: path
+          required: true
+          description: jwt token sended to email when update a forgoten password
+      responses:
+        "200":
+          description: return the ticket of the products purchased
+          content:
+            application/json:
+              description: json containing message of successfull
+              type: object
+              properties:
+                message:
+                  type: string
+                  default: El correo fue enviado sigue las instrucciones
+        "400":
+          description: internal error
+          content:
+            application/json:
+              description: when error return status error and message of error
+              type: object
+              properties:
+                status:
+                  type: string
+                  default: error
+                message:
+                  type: string
+                  description: Error message
+  /api/user/{uid}/documents:
+    post:
+      summary: Upload documents for Identification, BankProof and ProofAdress
+      tags:
+        - User
+      parameters:
+        - name: uid
+          in: path
+          required: true
+          description: User id
+      requestBody:
+        content: 
+          multipart/form-data: 
+            schema:            
+              type: object
+              properties:      
+                identification:            
+                  type: string
+                  format: binary
+                proofAdress:       
+                  type: string
+                  format: binary
+                bankProof:  
+                  type: string
+                  format: binary
+      responses:
+        "200":
+          description: and array with all the documents uploaded
+          content:
+            application/json:
+              description: json containing teh documents uploaded
+              type: object
+              properties:
+                status:
+                  type: string
+                  default: success
+                message:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        description: name of what file was uploaded
+                      reference:
+                        type: string
+                        description: route where the file is located
+        "400":
+          description: internal error
+          content:
+            application/json:
+              description: when error return status error and message of error
+              type: object
+              properties:
+                status:
+                  type: string
+                  default: error
+                message:
+                  type: string
+                  description: Error message
+  /api/user/:
+    get:
+      summary: Get all users
+      tags:
+        - User
+      responses:
+        "200":
+        content:
+            application/json:
+              type: object
+              description: return an array of all users
+              properties:
+                status:
+                  type: string
+                  default: success
+                message:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/User'
+        "400":
+          description: internal error
+          content:
+            application/json:
+              description: when error return status error and message of error
+              type: object
+              properties:
+                status:
+                  type: string
+                  default: error
+                message:
+                  type: string
+                  description: Error message
+  /api/user/inactive:
     delete:
-      summary: Delete all the products in the cart
+      summary: Delete al users that have more than 48 hours without login in
       tags:
-        - Cart
-      parameters:
-        - name: ccid
-          in: path
-          required: true
-          description: id of cart
+        - User
       responses:
         "200":
-          description: return the ticket of the products purchased
-          content:
+        content:
             application/json:
-              schema:
-                type: string
-                description: message that indicates that cart was deleted
+              type: object
+              description: return an array of all users deleted
+              properties:
+                status:
+                  type: string
+                  default: success
+                message:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/User'
         "400":
           description: internal error
+          content:
+            application/json:
+              description: when error return status error and message of error
+              type: object
+              properties:
+                status:
+                  type: string
+                  default: error
+                message:
+                  type: string
+                  description: Error message
+  /api/user/{uid}:
+    delete:
+      summary: Delete a user of the given uid
+      tags:
+        - User
+      parameters:
+        - name: uid
+          in: path
+          required: true
+          description: User id that gonna be deleted
+      responses:
+        "200":
+        content:
+            application/json:
+              type: object
+              description: return an array of all users deleted
+              properties:
+                status:
+                  type: string
+                  default: success
+                message:
+                    $ref: '#/components/schemas/User'
+        "400":
+          description: internal error
+          content:
+            application/json:
+              description: when error return status error and message of error
+              type: object
+              properties:
+                status:
+                  type: string
+                  default: error
+                message:
+                  type: string
+                  description: Error message
 components:
   schemas:
     User:
@@ -252,15 +371,10 @@ components:
             description: las time the user logged
       required: 
         - first_name
+        - last_name
         - email
         - password
-        - cart
-        - role
-        - stock
-        - code
-        - status
-        - category
-        - owner
+        - age
       example:
         _id: 65f54c17d38f2e0f51384963
         first_name: Coder

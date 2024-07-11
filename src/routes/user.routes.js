@@ -19,15 +19,12 @@ router.get("/logout", logoutUserCtrl)
 
 router.post("/login", passport.authenticate('login', {
   failureRedirect: '/login',
-  failureFlash: true,
   session: false,
 }), loginUserCookieCtrl);
 
 router.post("/register", passport.authenticate('register', {
-  successRedirect: '/',
-  successFlash: true,
-  failureRedirect: '/login',
-  failureFlash: true,
+  successRedirect: '/login',
+  failureRedirect: '/register',
   session: false,
 }));
 
